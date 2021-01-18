@@ -4,6 +4,7 @@ local LerpMethods = {}
 local Lerps = {}
 local InactiveLerps = {}
 LerpMethods.__index = LerpMethods
+LerpMethods.__mode = "k"
 
 function LerpMethods.New(Part, Time, EasingStyle, Direction,StartVal, EndPos,Property, Callback)
 	local Data = {}
@@ -23,7 +24,12 @@ function LerpMethods.New(Part, Time, EasingStyle, Direction,StartVal, EndPos,Pro
 end
 
 function LerpMethods:Destroy()
-	self:Destroy()
+	InactiveLerps[self.Part] = nil
+	Lerps[self.Part] = nil
+	for Key, Info in pairs(self) do
+		Info = nil
+		self[Key] = nil
+	end
 end
 
 function LerpMethods:Play()
